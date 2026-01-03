@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- PRODUCT IMAGE -->
+        <TextView
+            android:text="Product Image"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:layout_marginBottom="8dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <ImageView
+            android:id="@+id/imgProduct"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_gravity="center"
+            android:background="@drawable/bg_image_box"
+            android:padding="16dp"
+            android:src="@drawable/ic_upload"
+            android:scaleType="centerCrop"/>
+
+        <!-- PRODUCT NAME -->
+        <EditText
+            android:id="@+id/etName"
+            android:hint="Product Name"
+            android:layout_marginTop="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <!-- BRAND -->
+        <EditText
+            android:id="@+id/etBrand"
+            android:hint="Brand"
+            android:layout_marginTop="12dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <!-- CATEGORY -->
+        <EditText
+            android:id="@+id/etCategory"
+            android:hint="Category"
+            android:layout_marginTop="12dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <!-- DAILY RATE -->
+        <EditText
+            android:id="@+id/etDailyRate"
+            android:hint="Daily Rate"
+            android:inputType="numberDecimal"
+            android:layout_marginTop="12dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <!-- DEPOSIT -->
+        <EditText
+            android:id="@+id/etDeposit"
+            android:hint="Deposit"
+            android:inputType="numberDecimal"
+            android:layout_marginTop="12dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <!-- DESCRIPTION -->
+        <EditText
+            android:id="@+id/etDescription"
+            android:hint="Description"
+            android:minLines="3"
+            android:gravity="top"
+            android:layout_marginTop="12dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <!-- UPDATE BUTTON -->
+        <Button
+            android:id="@+id/btnUpdate"
+            android:text="Update Product"
+            android:layout_marginTop="24dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+</ScrollView>

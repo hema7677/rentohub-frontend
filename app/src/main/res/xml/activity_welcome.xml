@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- Background Gradient -->
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/gradient_bg"
+        android:gravity="center">
+
+        <!-- Logo -->
+        <ImageView
+            android:id="@+id/logo"
+            android:layout_width="180dp"
+            android:layout_height="180dp"
+            android:layout_marginBottom="20dp" />
+
+        <!-- App Title -->
+        <TextView
+            android:id="@+id/app_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="RENT - O - HUB"
+            android:textColor="#FFFFFF"
+            android:textSize="26sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="10dp" />
+
+        <!-- Description -->
+        <TextView
+            android:id="@+id/app_desc"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:text="Discover your ideal home with us,\nwhether you're looking to buy or rent."
+            android:textAlignment="center"
+            android:textColor="#EDEDED"
+            android:textSize="14sp"
+            android:layout_marginBottom="40dp" />
+
+        <!-- Register Button -->
+        <Button
+            android:id="@+id/btn_register"
+            android:layout_width="260dp"
+            android:layout_height="50dp"
+            android:text="Register"
+            android:textSize="18sp"
+            android:textColor="#FFFFFF"
+            android:backgroundTint="#0099FF"
+            android:layout_marginBottom="20dp" />
+
+        <!-- Login Button -->
+        <Button
+            android:id="@+id/btn_login"
+            android:layout_width="260dp"
+            android:layout_height="50dp"
+            android:text="Login"
+            android:textSize="18sp"
+            android:textColor="#FFFFFF"
+            android:background="@drawable/login_button_bg" />
+
+    </LinearLayout>
+
+</RelativeLayout>

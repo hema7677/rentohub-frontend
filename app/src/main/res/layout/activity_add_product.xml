@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF">
+
+    <!-- SCROLLABLE CONTENT -->
+    <ScrollView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/bottom_navigation"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <!-- PRODUCT IMAGE -->
+            <TextView
+                android:text="Product Image"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:layout_marginBottom="8dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_marginBottom="16dp">
+
+                <ImageView
+                    android:id="@+id/imgUpload"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:background="@drawable/bg_image_box"
+                    android:padding="20dp"
+                    android:src="@drawable/ic_upload"
+                    android:scaleType="centerInside"/>
+            </LinearLayout>
+
+            <!-- PRODUCT NAME -->
+            <TextView
+                android:text="Product Name"
+                android:textStyle="bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <EditText
+                android:id="@+id/etProductName"
+                android:hint="e.g., Sony A7S III"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <!-- BRAND -->
+            <TextView
+                android:text="Brand"
+                android:textStyle="bold"
+                android:layout_marginTop="12dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <EditText
+                android:id="@+id/etBrand"
+                android:hint="e.g., Sony"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <!-- CATEGORY -->
+            <TextView
+                android:text="Category"
+                android:textStyle="bold"
+                android:layout_marginTop="12dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <Spinner
+                android:id="@+id/spCategory"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/edittext_bg"/>
+
+            <!-- DAILY RATE -->
+            <TextView
+                android:text="Daily Rate"
+                android:textStyle="bold"
+                android:layout_marginTop="12dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <EditText
+                android:id="@+id/etDailyRate"
+                android:hint="₹2,500"
+                android:inputType="number"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <!-- DEPOSIT -->
+            <TextView
+                android:text="Deposit Amount"
+                android:textStyle="bold"
+                android:layout_marginTop="12dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <EditText
+                android:id="@+id/etDeposit"
+                android:hint="₹5,000"
+                android:inputType="number"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <!-- DESCRIPTION -->
+            <TextView
+                android:text="Description"
+                android:textStyle="bold"
+                android:layout_marginTop="12dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <EditText
+                android:id="@+id/etDescription"
+                android:hint="Product description..."
+                android:minLines="3"
+                android:gravity="top"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <!-- SUBMIT BUTTON -->
+            <Button
+                android:id="@+id/btnSubmit"
+                android:text="Add Product"
+                android:layout_marginTop="24dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- 🔹 BOTTOM NAVIGATION -->
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_navigation"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        app:menu="@menu/bottom_menu"
+        app:itemIconTint="@color/bottom_nav_color"
+        app:itemTextColor="@color/bottom_nav_color"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
