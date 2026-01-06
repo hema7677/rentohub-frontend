@@ -33,7 +33,7 @@ class ProfileFragment : Fragment() {
 
         tvName = view.findViewById(R.id.tvDisplayName)
         tvEmail = view.findViewById(R.id.tvDisplayEmail)
-        tvPhone = view.findViewById(R.id.tvDisplayPhone)
+//        tvPhone = view.findViewById(R.id.tvDisplayPhone)/
         ivProfile = view.findViewById(R.id.ivProfilePic)
         val btnBack = view.findViewById<View>(R.id.btnBack)
         val btnEdit = view.findViewById<View>(R.id.btnEdit)
@@ -54,9 +54,9 @@ class ProfileFragment : Fragment() {
         }
 
         // Booked Order - Shows fake order history
-        setupOption(view.findViewById(R.id.optionBookedOrder), R.drawable.ic_booking_check, "Booked Order") {
-            startActivity(Intent(requireContext(), OrdersActivity::class.java))
-        }
+//        setupOption(view.findViewById(R.id.optionBookedOrder), R.drawable.ic_booking_check, "Booked Order") {
+//            startActivity(Intent(requireContext(), OrdersActivity::class.java))
+//        }
 
         // About Us
         setupOption(view.findViewById(R.id.optionAboutUs), R.drawable.ic_info, "About Us") {
@@ -96,9 +96,9 @@ class ProfileFragment : Fragment() {
         try {
             val sharedPreferences = requireContext().getSharedPreferences("UserSession", Context.MODE_PRIVATE)
             
-            val name = sharedPreferences.getString("user_name", "Pooja Patel")
-            val email = sharedPreferences.getString("user_email", "poojabhaipooja@gmail.com")
-            val phone = sharedPreferences.getString("user_phone", "+91 8448484848")
+            val name = sharedPreferences.getString("user_name", "User Name")
+            val email = sharedPreferences.getString("user_email", "user@email.com")
+            val phone = sharedPreferences.getString("user_phone", "Not provided")
             val imageUri = sharedPreferences.getString("user_image", null)
 
             tvName.text = name

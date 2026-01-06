@@ -161,7 +161,7 @@ class BookingActivity : AppCompatActivity(), PaymentResultListener {
 
     private fun showDatePicker(onDateSelected: (Calendar) -> Unit) {
         val calendar = Calendar.getInstance()
-        DatePickerDialog(
+        val datePickerDialog = DatePickerDialog(
             this,
             { _, year, month, day ->
                 val date = Calendar.getInstance()
@@ -171,7 +171,9 @@ class BookingActivity : AppCompatActivity(), PaymentResultListener {
             calendar.get(Calendar.YEAR),
             calendar.get(Calendar.MONTH),
             calendar.get(Calendar.DAY_OF_MONTH)
-        ).show()
+        )
+        datePickerDialog.datePicker.minDate = System.currentTimeMillis() - 1000
+        datePickerDialog.show()
     }
 
     private fun formatDate(calendar: Calendar): String {
@@ -244,10 +246,10 @@ class BookingActivity : AppCompatActivity(), PaymentResultListener {
         isProcessing = true
         findViewById<View>(R.id.loadingOverlay).visibility = View.VISIBLE
         val address = etAddress.text.toString().trim()
-        saveBookingToBackend(razorpayPaymentID, address)
+        saveBookingToBackend(razorpayPaymentID, address, "Completed")
     }
 
-    private fun saveBookingToBackend(paymentId: String?, address: String) {
+    private fun saveBookingToBackend(paymentId: String?, location: String, status: String) {
         val sharedPreferences = getSharedPreferences("UserSession", MODE_PRIVATE)
         val userId = sharedPreferences.getString("user_id", null)
 
@@ -258,7 +260,7 @@ class BookingActivity : AppCompatActivity(), PaymentResultListener {
 
         val days = txtTotalDays.text.toString()
 
-        RetrofitClient.api.placeBooking(userId, equipmentId.toString(), days, address)
+        RetrofitClient.api.placeBooking(userId, equipmentId.toString(), days, location, status, paymentId)
             .enqueue(object : retrofit2.Callback<BookingResponse> {
                 override fun onResponse(
                     call: retrofit2.Call<BookingResponse>,
@@ -300,14 +302,19 @@ class BookingActivity : AppCompatActivity(), PaymentResultListener {
     override fun onPaymentError(code: Int, response: String?) {
         isProcessing = false
         findViewById<View>(R.id.btnPayNow).isEnabled = true
-        Toast.makeText(this, "Payment Failed: $response", Toast.LENGTH_LONG).show()
+        val address = etAddress.text.toString().trim()
+        
+        // Even if payment fails, record it as Failed in DB
+        saveBookingToBackend(null, address, "Failed")
+        
+        Toast.makeText(this, "Payment Failed/Cancelled: $response", Toast.LENGTH_LONG).show()
     }
 
     private fun showPaymentSuccessDialog(paymentId: String?) {
         val nextIntent = Intent(this, PaymentSuccessActivity::class.java)
         nextIntent.putExtra("txn_id", paymentId)
         nextIntent.putExtra("amount", "₹$totalAmount")
-        nextIntent.putExtra("address", etAddress.text.toString().trim())
+        nextIntent.putExtra("address", etAddress.text.toString().trim()) // Match key used in Success activity
         nextIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
         startActivity(nextIntent)
         finish()

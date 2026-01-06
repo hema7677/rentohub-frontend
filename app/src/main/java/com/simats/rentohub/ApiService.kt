@@ -80,7 +80,9 @@ interface ApiService {
         @Field("user_id") userId: String,
         @Field("equipment_id") equipmentId: String,
         @Field("days") days: String,
-        @Field("address") address: String
+        @Field("location") location: String,
+        @Field("status") status: String,
+        @Field("payment_id") paymentId: String?
     ): Call<BookingResponse>
 
     // ================= GET USER BOOKINGS =================
@@ -101,4 +103,18 @@ interface ApiService {
     // ================= GET ALL BOOKINGS (ADMIN) =================
     @GET("view_all_bookings.php")
     fun getAllBookings(): Call<UserBookingsResponse>
+
+    @FormUrlEncoded
+    @POST("get_booking_details.php")
+    fun getBookingDetails(
+        @Field("booking_id") bookingId: String
+    ): Call<BookingDetailsResponse>
+
+    // ================= GOOGLE SYNC =================
+    @FormUrlEncoded
+    @POST("google_sync.php")
+    fun syncGoogleUser(
+        @Field("name") name: String,
+        @Field("email") email: String
+    ): Call<LoginResponse>
 }

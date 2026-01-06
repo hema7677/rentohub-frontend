@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "480702806544",
+    "project_id": "rentohub-b109d",
+    "storage_bucket": "rentohub-b109d.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:480702806544:android:d29ecae4b3f339ec016895",
+        "android_client_info": {
+          "package_name": "com.simats.rentohub"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "480702806544-r5975ik9n86lv9ltavt1nq0fbjei5coa.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.simats.rentohub",
+            "certificate_hash": "e8682f88f00d17de171d43c3a3329e93f731320e"
+          }
+        },
+        {
+          "client_id": "480702806544-7evn76rcgd761s10cdk42o7ti86kc7vi.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAPXgyjAM7fni-D_LyGOEWib08EdBMcPfE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "480702806544-7evn76rcgd761s10cdk42o7ti86kc7vi.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

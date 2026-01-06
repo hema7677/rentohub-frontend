@@ -15,7 +15,7 @@ class PaymentReceiptActivity : AppCompatActivity() {
 
         val txnId = intent.getStringExtra("txn_id") ?: "N/A"
         val amount = intent.getStringExtra("amount") ?: "₹0"
-        val address = intent.getStringExtra("address") ?: "N/A"
+        val location = intent.getStringExtra("location") ?: "N/A"
         val date = SimpleDateFormat("MMM dd, yyyy HH:mm", Locale.getDefault()).format(Date())
 
         findViewById<TextView>(R.id.tvAmount).text = amount
@@ -30,7 +30,7 @@ class PaymentReceiptActivity : AppCompatActivity() {
         setRow(R.id.rowTxnId, "Transaction ID", txnId)
         setRow(R.id.rowDate, "Date & Time", date)
         setRow(R.id.rowStatus, "Payment Status", "Success")
-        setRow(R.id.rowAddress, "Booking Address", address)
+        setRow(R.id.rowAddress, "Booking Location", location)
 
         findViewById<android.view.View>(R.id.btnViewBookings).setOnClickListener {
             val intent = Intent(this, UserMainActivity::class.java)

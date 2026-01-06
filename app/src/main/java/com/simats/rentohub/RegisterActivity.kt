@@ -70,6 +70,7 @@ class RegisterActivity : AppCompatActivity() {
                         val sharedPreferences = getSharedPreferences("UserSession", MODE_PRIVATE)
                         val editor = sharedPreferences.edit()
                         editor.putString("usertype", usertype)
+                        editor.putString("user_email", email)
                         editor.apply()
 
                         // Redirect to FillProfile screen

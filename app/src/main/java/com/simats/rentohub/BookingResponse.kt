@@ -8,10 +8,10 @@ data class BookingResponse(
 )
 
 data class BookingData(
-    val equipment_id: String,
+    val equipment_id: Int,
     val equipment_name: String,
     val image: String,
-    val daily_rate: String,
-    val days: String,
+    val daily_rate: Double,
+    val days: Int,
     val total_amount: Double
 )

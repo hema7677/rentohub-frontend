@@ -34,11 +34,8 @@ class UserMainActivity : AppCompatActivity() {
             val navigateTo = intent.getStringExtra("NAVIGATE_TO")
             if (navigateTo == "BOOKINGS") {
                 bottomNav.selectedItemId = R.id.nav_booking
-                // Explicitly load if setting selectedItemId didn't trigger it (or to be safe)
-                loadFragment(BookingsFragment())
             } else {
                 bottomNav.selectedItemId = R.id.nav_home
-                loadFragment(HomeFragment())
             }
         }
 

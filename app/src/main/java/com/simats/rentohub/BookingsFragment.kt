@@ -36,9 +36,9 @@ class BookingsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         // Get user info from SharedPreferences
-        val sharedPreferences = requireContext().getSharedPreferences("UserSession", Context.MODE_PRIVATE)
-        isAdmin = sharedPreferences.getString("usertype", "") == "admin"
-        userId = sharedPreferences.getString("user_id", "")
+        val sharedPreferences = context?.getSharedPreferences("UserSession", Context.MODE_PRIVATE)
+        isAdmin = sharedPreferences?.getString("usertype", "") == "admin"
+        userId = sharedPreferences?.getString("user_id", "")
 
         tabUpcoming = view.findViewById(R.id.tabUpcoming)
         tabActive = view.findViewById(R.id.tabActive)
@@ -48,12 +48,16 @@ class BookingsFragment : Fragment() {
 
         tvHeaderTitle.text = if (isAdmin) "Manage Bookings" else "My Bookings"
 
+        if (!isAdmin) {
+            view.findViewById<View>(R.id.tabLayout)?.visibility = View.GONE
+        }
+
         btnBack?.setOnClickListener {
-            requireActivity().onBackPressed()
+            activity?.onBackPressed()
         }
 
         rvBookings = view.findViewById(R.id.rvBookings)
-        rvBookings.layoutManager = LinearLayoutManager(requireContext())
+        rvBookings.layoutManager = LinearLayoutManager(context)
 
         // Fetch Bookings from API
         fetchBookings()
@@ -61,17 +65,24 @@ class BookingsFragment : Fragment() {
         // Tab Click Listeners
         tabUpcoming.setOnClickListener { 
             selectTab(tabUpcoming)
-            filterBookings("Upcoming")
+            currentSelectedTab = if (isAdmin) "Upcoming" else "Failed"
+            filterBookings(currentSelectedTab)
         }
         tabActive.setOnClickListener { 
-            selectTab(tabActive)
-            filterBookings("Active")
+            if (isAdmin) {
+                selectTab(tabActive)
+                currentSelectedTab = "Active"
+                filterBookings(currentSelectedTab)
+            }
         }
         tabCompleted.setOnClickListener { 
             selectTab(tabCompleted)
-            filterBookings("Completed")
+            currentSelectedTab = "Completed"
+            filterBookings(currentSelectedTab)
         }
     }
+
+    private var currentSelectedTab: String = ""
 
     private fun fetchBookings() {
         val call = if (isAdmin) {
@@ -80,100 +91,110 @@ class BookingsFragment : Fragment() {
             RetrofitClient.api.getUserBookings(userId ?: "")
         }
 
+        // Set initial tab if empty
+        if (currentSelectedTab.isEmpty()) {
+            currentSelectedTab = if (isAdmin) "Upcoming" else "Completed"
+        }
+
+
         call.enqueue(object : Callback<UserBookingsResponse> {
             override fun onResponse(call: Call<UserBookingsResponse>, response: Response<UserBookingsResponse>) {
-                if (response.isSuccessful && response.body()?.status == "success") {
-                    val remoteBookings = response.body()?.data ?: emptyList()
-                    if (remoteBookings.isEmpty()) {
-                        loadHardcodedData()
-                        return
+                if (response.isSuccessful) {
+                    val body = response.body()
+                    if (body?.status == "success") {
+                        val remoteBookings = body.data ?: emptyList()
+                        
+
+                        if (remoteBookings.isEmpty()) {
+                            allBookings = emptyList()
+                            filterBookings(currentSelectedTab) 
+                            return
+                        }
+                        // Map remote bookings to local BookingItem
+                        allBookings = remoteBookings.map {
+                            BookingItem(
+                                id = (it.booking_id ?: 0).toString(),
+                                name = it.equipment_name ?: "Unknown Item",
+                                date = it.booking_date ?: "N/A",
+                                price = "₹${it.total_amount ?: "0"}",
+                                status = it.status ?: "Pending", 
+                                imageRes = 0, 
+                                location = it.location ?: "No location",
+                                imageUrl = it.image
+                            )
+                        }
+                        
+                        filterBookings(currentSelectedTab)
+
+                    } else {
+                        val msg = body?.message ?: "Unknown server error"
+                        context?.let { Toast.makeText(it, "Server: $msg", Toast.LENGTH_LONG).show() }
+                        allBookings = emptyList()
+                        filterBookings(currentSelectedTab)
                     }
-                    // Map remote bookings to local BookingItem
-                    allBookings = remoteBookings.map {
-                        BookingItem(
-                            id = it.booking_id.toString(),
-                            name = it.equipment_name,
-                            date = it.booking_date,
-                            price = "₹${it.total_amount}",
-                            status = it.status,
-                            imageRes = 0, 
-                            address = "",
-                            imageUrl = it.image
-                        )
-                    }
-                    // Refresh current tab
-                    val currentTab = when {
-                        tabUpcoming.typeface?.isBold == true -> "Upcoming"
-                        tabActive.typeface?.isBold == true -> "Active"
-                        else -> "Completed"
-                    }
-                    filterBookings(currentTab)
                 } else {
-                    loadHardcodedData()
+                    context?.let {
+                        Toast.makeText(it, "Error Code: ${response.code()}", Toast.LENGTH_LONG).show()
+                    }
+                    allBookings = emptyList()
+                    filterBookings(currentSelectedTab)
                 }
             }
 
             override fun onFailure(call: Call<UserBookingsResponse>, t: Throwable) {
-                // Fallback to hardcoded for demo
-                loadHardcodedData()
+                allBookings = emptyList()
+                filterBookings(currentSelectedTab)
+                context?.let {
+                    Toast.makeText(it, "Network Error: ${t.message}", Toast.LENGTH_LONG).show()
+                }
             }
         })
     }
 
-    private fun loadHardcodedData() {
-        allBookings = listOf(
-            BookingItem("ID: 1001", "Sony Alpha IV", "Jan 10, 2024", "₹3,500", "Pending", R.drawable.camera, "62 Beach Rd, Chennai"),
-            BookingItem("ID: 1002", "Canon EOS R5", "Jan 11, 2024", "₹4,200", "Pending", R.drawable.camera, "12 Anna Salai, Chennai"),
-            BookingItem("ID: 1003", "DJI Mavic 3 Drone", "Jan 12, 2024", "₹5,000", "Confirmed", R.drawable.camera, "45 OMR Road, Chennai"),
-            BookingItem("ID: 1004", "Nikcon Z6 II", "Jan 05, 2024", "₹2,500", "Active", R.drawable.camera, "GST Road, St. Thomas Mount"),
-            BookingItem("ID: 1005", "Sony 85mm f/1.8", "Jan 04, 2024", "₹1,200", "Delivered", R.drawable.lens, "T-Nagar Market, Chennai"),
-            BookingItem("ID: 1006", "Godox Ring Light", "Jan 15, 2024", "₹800", "Upcoming", R.drawable.ic_ring_light, "Velachery Main Rd"),
-            BookingItem("ID: 1007", "Heavy Duty Tripod", "Jan 02, 2024", "₹500", "Completed", R.drawable.tripod, "Adyar Flyover, Chennai"),
-            BookingItem("ID: 1008", "Rode VideoMic", "Jan 01, 2024", "₹600", "Cancelled", R.drawable.camera, "Mount Road, Chennai")
-        )
-        // Refresh display based on current selection
-        val currentTab = when {
-            tabUpcoming.typeface?.isBold == true -> "Upcoming"
-            tabActive.typeface?.isBold == true -> "Active"
-            else -> "Completed"
-        }
-        filterBookings(currentTab)
-    }
 
     private fun updateBookingStatus(bookingId: String, newStatus: String) {
         RetrofitClient.api.updateBookingStatus(bookingId, newStatus)
             .enqueue(object : Callback<UpdateProductResponse> {
                 override fun onResponse(call: Call<UpdateProductResponse>, response: Response<UpdateProductResponse>) {
                     if (response.isSuccessful) {
-                        Toast.makeText(requireContext(), "Status updated to $newStatus", Toast.LENGTH_SHORT).show()
+                        context?.let { Toast.makeText(it, "Status updated to $newStatus", Toast.LENGTH_SHORT).show() }
                         fetchBookings() // Refresh list
                     } else {
-                        Toast.makeText(requireContext(), "Update failed", Toast.LENGTH_SHORT).show()
+                        context?.let { Toast.makeText(it, "Update failed", Toast.LENGTH_SHORT).show() }
                     }
                 }
 
                 override fun onFailure(call: Call<UpdateProductResponse>, t: Throwable) {
-                    Toast.makeText(requireContext(), "Error: ${t.message}", Toast.LENGTH_SHORT).show()
+                    context?.let { Toast.makeText(it, "Error: ${t.message}", Toast.LENGTH_SHORT).show() }
                 }
             })
     }
 
     private fun filterBookings(tab: String) {
-        val filtered = when (tab) {
-            "Upcoming" -> allBookings.filter { 
-                it.status.equals("Confirmed", true) || 
-                it.status.equals("Pending", true) || 
-                it.status.equals("Upcoming", true) 
+        val filtered = if (isAdmin) {
+            when (tab) {
+                "Upcoming" -> allBookings.filter { 
+                    it.status.isNullOrEmpty() ||
+                    it.status.equals("Confirmed", true) || 
+                    it.status.equals("Pending", true) || 
+                    it.status.equals("Upcoming", true) 
+                }
+                "Active" -> allBookings.filter { 
+                    it.status.equals("Active", true) || 
+                    it.status.equals("Delivered", true) 
+                }
+                "Completed" -> allBookings.filter { 
+                    it.status.equals("Completed", true) || 
+                    it.status.equals("Cancelled", true) 
+                }
+                else -> allBookings
             }
-            "Active" -> allBookings.filter { 
-                it.status.equals("Active", true) || 
-                it.status.equals("Delivered", true) 
+        } else {
+            // User side filtering: Only show Completed
+            when (tab) {
+                "Completed" -> allBookings.filter { it.status.equals("Completed", true) }
+                else -> allBookings.filter { it.status.equals("Completed", true) }
             }
-            "Completed" -> allBookings.filter { 
-                it.status.equals("Completed", true) || 
-                it.status.equals("Cancelled", true) 
-            }
-            else -> allBookings
         }
         
         rvBookings.adapter = BookingAdapter(filtered, isAdmin) { booking, newStatus ->

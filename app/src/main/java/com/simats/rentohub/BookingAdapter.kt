@@ -77,33 +77,103 @@ class BookingAdapter(
         // Show details on click
         holder.itemView.setOnClickListener {
             val context = holder.itemView.context
-            val builder = androidx.appcompat.app.AlertDialog.Builder(context)
-            builder.setTitle("Booking Details")
             
-            val message = "Item: ${booking.name}\n" +
-                          "Date: ${booking.date}\n" +
-                          "Current Status: ${booking.status}\n" +
-                          "Address: ${if (booking.address.isNotEmpty()) booking.address else "No address provided"}"
-            
-            builder.setMessage(message)
-            builder.setPositiveButton("OK") { dialog, _ -> dialog.dismiss() }
-            if (isAdmin) {
-                builder.setNeutralButton("Change Status") { _, _ -> showStatusDialog(context, booking) }
+            try {
+                // Prevent showing dialog if activity is finishing
+                val activity = context as? android.app.Activity
+                if (activity?.isFinishing == true || activity?.isDestroyed == true) return@setOnClickListener
+
+                // Show a "Loading..." dialog first
+                val loadingDialog = com.google.android.material.dialog.MaterialAlertDialogBuilder(context)
+                    .setTitle("Fetching Details")
+                    .setMessage("Please wait...")
+                    .setCancelable(false)
+                    .show()
+
+                RetrofitClient.api.getBookingDetails(booking.id)
+                    .enqueue(object : retrofit2.Callback<BookingDetailsResponse> {
+                        override fun onResponse(
+                            call: retrofit2.Call<BookingDetailsResponse>,
+                            response: retrofit2.Response<BookingDetailsResponse>
+                        ) {
+                            if (activity?.isFinishing == true || activity?.isDestroyed == true) return
+                            loadingDialog.dismiss()
+                            
+                            if (response.isSuccessful && response.body()?.status == "success") {
+                                val details = response.body()?.data
+                                if (details != null) {
+                                    val message = "--- PRODUCT ---\n" +
+                                                  "Item: ${details.equipment_name ?: "N/A"}\n" +
+                                                  "Price: ₹${details.daily_rate ?: "0"} / day\n" +
+                                                  "Days: ${details.days ?: "0"}\n\n" +
+                                                  "--- CUSTOMER ---\n" +
+                                                  "Name: ${details.user_name ?: "N/A"}\n" +
+                                                  "Email: ${details.user_email ?: "N/A"}\n" +
+                                                  "Location: ${details.location ?: "N/A"}\n\n" +
+                                                  "--- PAYMENT ---\n" +
+                                                  "Total: ₹${details.total_amount ?: "0"}\n" +
+                                                  "Status: ${details.status ?: "N/A"}\n" +
+                                                  "Date: ${details.booking_date ?: "N/A"}"
+
+                                    com.google.android.material.dialog.MaterialAlertDialogBuilder(context)
+                                        .setTitle("Full Booking Details")
+                                        .setMessage(message)
+                                        .setPositiveButton("OK") { d, _ -> d.dismiss() }
+                                        .show()
+                                } else {
+                                    showBasicDetails(context, booking)
+                                }
+                            } else {
+                                showBasicDetails(context, booking)
+                            }
+                        }
+
+                        override fun onFailure(call: retrofit2.Call<BookingDetailsResponse>, t: Throwable) {
+                            if (activity?.isFinishing == true || activity?.isDestroyed == true) return
+                            loadingDialog.dismiss()
+                            showBasicDetails(context, booking)
+                        }
+                    })
+            } catch (e: Exception) {
+                e.printStackTrace()
+                showBasicDetails(context, booking)
             }
-            builder.show()
+        }
+    }
+
+    private fun showBasicDetails(context: android.content.Context, booking: BookingItem) {
+        try {
+            val activity = context as? android.app.Activity
+            if (activity?.isFinishing == true || activity?.isDestroyed == true) return
+
+            com.google.android.material.dialog.MaterialAlertDialogBuilder(context)
+                .setTitle("Booking Info")
+                .setMessage("Item: ${booking.name}\n" +
+                          "Date: ${booking.date}\n" +
+                          "Status: ${booking.status}\n" +
+                          "Location: ${if (booking.location.isNotEmpty()) booking.location else "N/A"}")
+                .setPositiveButton("OK") { dialog, _ -> dialog.dismiss() }
+                .show()
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 
     private fun showStatusDialog(context: android.content.Context, booking: BookingItem) {
-        val builder = androidx.appcompat.app.AlertDialog.Builder(context)
-        builder.setTitle("Update Status")
-        builder.setMessage("Choose action for ${booking.name}:")
-        
-        builder.setNeutralButton("Pending") { _, _ -> onStatusUpdate?.invoke(booking, "Pending") }
-        builder.setPositiveButton("Confirm") { _, _ -> onStatusUpdate?.invoke(booking, "Confirmed") }
-        builder.setNegativeButton("Reject") { _, _ -> onStatusUpdate?.invoke(booking, "Cancelled") }
-        
-        builder.show()
+        try {
+            val activity = context as? android.app.Activity
+            if (activity?.isFinishing == true || activity?.isDestroyed == true) return
+
+            com.google.android.material.dialog.MaterialAlertDialogBuilder(context)
+                .setTitle("Update Status")
+                .setMessage("Action for ${booking.name}:")
+                .setNeutralButton("Pending") { _, _ -> onStatusUpdate?.invoke(booking, "Pending") }
+                .setPositiveButton("Confirm") { _, _ -> onStatusUpdate?.invoke(booking, "Confirmed") }
+                .setNegativeButton("Reject") { _, _ -> onStatusUpdate?.invoke(booking, "Cancelled") }
+                .show()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
     private fun updateStatusUI(tvStatus: TextView, status: String) {

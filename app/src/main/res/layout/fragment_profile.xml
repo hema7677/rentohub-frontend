@@ -108,14 +108,14 @@
             android:textColor="#666666"
             android:textSize="14sp" />
 
-        <TextView
-            android:id="@+id/tvDisplayPhone"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
-            android:text="+91 8448484848"
-            android:textColor="#666666"
-            android:textSize="14sp" />
+<!--        <TextView-->
+<!--            android:id="@+id/tvDisplayPhone"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginTop="2dp"-->
+<!--            android:text="+91 8448484848"-->
+<!--            android:textColor="#666666"-->
+<!--            android:textSize="14sp" />-->
     </LinearLayout>
 
     <!-- Content Section -->
@@ -135,9 +135,9 @@
             android:paddingTop="8dp"
             android:paddingBottom="80dp">
 
-            <!-- Booked Order -->
-            <include layout="@layout/item_profile_option" android:id="@+id/optionBookedOrder"/>
-            <View android:layout_width="match_parent" android:layout_height="1dp" android:layout_marginHorizontal="16dp" android:background="#F5F5F5"/>
+<!--            &lt;!&ndash; Booked Order &ndash;&gt;-->
+<!--            <include layout="@layout/item_profile_option" android:id="@+id/optionBookedOrder"/>-->
+<!--            <View android:layout_width="match_parent" android:layout_height="1dp" android:layout_marginHorizontal="16dp" android:background="#F5F5F5"/>-->
 
             <!-- About Us -->
             <include layout="@layout/item_profile_option" android:id="@+id/optionAboutUs"/>

@@ -7,6 +7,6 @@ data class BookingItem(
     val price: String,
     val status: String, // e.g., "Confirmed", "Pending", "Delivered"
     val imageRes: Int = 0, // 0 means use imageUrl
-    val address: String = "",
+    val location: String = "",
     val imageUrl: String? = null
 )

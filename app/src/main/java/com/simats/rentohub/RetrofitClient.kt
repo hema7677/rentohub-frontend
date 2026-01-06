@@ -9,7 +9,7 @@ import java.util.concurrent.TimeUnit
 object RetrofitClient {
 
     // Emulator
-    const val BASE_URL = "http:// 172.20.10.5/rentohub/"
+    const val BASE_URL = "http://192.168.0.104/rentohub/"
     // Physical device (same Wi-Fi)
     // const val BASE_URL = "http://192.168.1.5:80/rentohub/"
 
