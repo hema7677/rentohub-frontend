@@ -18,8 +18,8 @@ class UserActivity : AppCompatActivity() {
         bottomNav.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.nav_home -> loadFragment(HomeFragment())
-                R.id.nav_categories -> loadFragment(CategoriesFragment())
-                R.id.nav_bookings -> loadFragment(BookingsFragment())
+                R.id.nav_chats -> loadFragment(ChatFragment())
+                R.id.nav_booking -> loadFragment(BookingsFragment())
                 R.id.nav_profile -> loadFragment(ProfileFragment())
             }
             true

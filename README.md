@@ -1,1 +1,0 @@
-# rentohub-frontend

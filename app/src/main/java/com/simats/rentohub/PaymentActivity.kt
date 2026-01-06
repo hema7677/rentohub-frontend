@@ -1,4 +1,5 @@
-package com.example.rentalapp   // ← change if your package is different
+package com.simats.rentohub
+
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -18,7 +19,7 @@ class PaymentActivity : AppCompatActivity() {
         val bookingId = intent.getIntExtra("BOOKING_ID", 0)
         val amount = intent.getDoubleExtra("TOTAL_AMOUNT", 0.0)
 
-        findViewById<TextView>(R.id.txtAmount).text = "Pay ₹$amount"
+        findViewById<TextView>(R.id.txtAmount).text = "Pay ₹amount"
 
         findViewById<Button>(R.id.btnPay).setOnClickListener {
             Toast.makeText(this, "Payment Successful", Toast.LENGTH_SHORT).show()

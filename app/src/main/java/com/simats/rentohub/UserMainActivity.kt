@@ -1,6 +1,7 @@
 package com.simats.rentohub
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -11,29 +12,36 @@ class UserMainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user_main)
 
-        // Load HomeFragment initially
-        loadFragment(HomeFragment())
-
         val bottomNav = findViewById<BottomNavigationView>(R.id.bottomNavigation)
-        bottomNav.selectedItemId = R.id.nav_home
-
+        
         bottomNav.setOnItemSelectedListener { item ->
-            when (item.itemId) {
-                R.id.nav_home -> {
-                    loadFragment(HomeFragment())
-                    true
-                }
-                R.id.nav_booking -> {
-                    loadFragment(BookingsFragment())
-                    true
-                }
-                R.id.nav_profile -> {
-                    loadFragment(ProfileFragment())
-                    true
-                }
-                else -> false
+            val fragment = when (item.itemId) {
+                R.id.nav_home -> HomeFragment()
+                R.id.nav_chats -> ChatFragment()
+                R.id.nav_booking -> BookingsFragment()
+                R.id.nav_profile -> ProfileFragment()
+                else -> null
+            }
+            
+            fragment?.let {
+                loadFragment(it)
+                true
+            } ?: false
+        }
+
+        // Only load if this is the first time (savedInstanceState is null)
+        if (savedInstanceState == null) {
+            val navigateTo = intent.getStringExtra("NAVIGATE_TO")
+            if (navigateTo == "BOOKINGS") {
+                bottomNav.selectedItemId = R.id.nav_booking
+                // Explicitly load if setting selectedItemId didn't trigger it (or to be safe)
+                loadFragment(BookingsFragment())
+            } else {
+                bottomNav.selectedItemId = R.id.nav_home
+                loadFragment(HomeFragment())
             }
         }
+
     }
 
     private fun loadFragment(fragment: Fragment) {

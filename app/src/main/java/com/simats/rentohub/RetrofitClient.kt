@@ -1,26 +1,38 @@
 package com.simats.rentohub
 
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
 object RetrofitClient {
 
-    const val BASE_URL = "https://qjvq60kp-80.inc1.devtunnels.ms/rentohub/"
+    // Emulator
+    const val BASE_URL = "http:// 172.20.10.5/rentohub/"
+    // Physical device (same Wi-Fi)
+    // const val BASE_URL = "http://192.168.1.5:80/rentohub/"
 
-    // 1. Create a custom OkHttpClient
+    private val loggingInterceptor = HttpLoggingInterceptor().apply {
+        level = HttpLoggingInterceptor.Level.BODY
+    }
+
     private val okHttpClient = OkHttpClient.Builder()
-        .connectTimeout(60, TimeUnit.SECONDS) // Wait 60s to connect
-        .readTimeout(60, TimeUnit.SECONDS)    // Wait 60s for server to send data
-        .writeTimeout(60, TimeUnit.SECONDS)   // Wait 60s to send data
+        .addInterceptor(loggingInterceptor)
+        .connectTimeout(10, TimeUnit.SECONDS)
+        .readTimeout(10, TimeUnit.SECONDS)
+        .writeTimeout(10, TimeUnit.SECONDS)
         .build()
+
+    private val gson = com.google.gson.GsonBuilder()
+        .setLenient()
+        .create()
 
     val api: ApiService by lazy {
         Retrofit.Builder()
             .baseUrl(BASE_URL)
-            .client(okHttpClient) // 2. Attach the custom client here
-            .addConverterFactory(GsonConverterFactory.create())
+            .client(okHttpClient)
+            .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
             .create(ApiService::class.java)
     }

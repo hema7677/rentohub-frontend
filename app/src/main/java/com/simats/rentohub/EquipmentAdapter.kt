@@ -7,11 +7,28 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.model.GlideUrl
+import com.bumptech.glide.load.model.LazyHeaders
 
 class EquipmentAdapter(
-    private val list: List<Equipment>,
+    private var fullList: List<Equipment>,
     private val onItemClick: (Equipment) -> Unit
 ) : RecyclerView.Adapter<EquipmentAdapter.ViewHolder>() {
+
+    private var displayList: List<Equipment> = fullList
+
+    fun filter(query: String) {
+        displayList = if (query.isEmpty()) {
+            fullList
+        } else {
+            fullList.filter {
+                it.name.contains(query, ignoreCase = true) ||
+                it.brand.contains(query, ignoreCase = true) ||
+                it.category.contains(query, ignoreCase = true)
+            }
+        }
+        notifyDataSetChanged()
+    }
 
     // 1️⃣ CREATE VIEW HOLDER (FIXED)
     override fun onCreateViewHolder(
@@ -33,16 +50,25 @@ class EquipmentAdapter(
 
     // 3️⃣ BIND DATA
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val item = list[position]
+        val item = displayList[position]
 
         holder.name.text = item.name
         holder.brand.text = item.brand
         holder.price.text = "₹${item.price_per_day} / day"
 
-        android.util.Log.d("IMAGE_URL", item.image)
+        // Fix: Ensure image URL is full.
+        val imageUrl = if (item.image.startsWith("http")) {
+            item.image
+        } else {
+            RetrofitClient.BASE_URL + item.image
+        }
+
+        val glideUrl = GlideUrl(imageUrl, LazyHeaders.Builder()
+            .addHeader("X-Tunnel-Skip-Anti-Phishing-Page", "true")
+            .build())
 
         Glide.with(holder.itemView.context)
-            .load(item.image)
+            .load(glideUrl)
             .placeholder(R.drawable.placeholder)
             .error(R.drawable.placeholder)
             .into(holder.img)
@@ -52,6 +78,6 @@ class EquipmentAdapter(
 
     // 4️⃣ ITEM COUNT (FIXED)
     override fun getItemCount(): Int {
-        return list.size
+        return displayList.size
     }
 }

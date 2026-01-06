@@ -1,5 +1,6 @@
 package com.simats.rentohub
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -24,23 +25,20 @@ class AdminDashboardActivity : AppCompatActivity() {
                     loadFragment(AdminHomeFragment())
                     true
                 }
-                R.id.nav_add_product -> {
-                    // You could either navigate to activity or fragment. 
-                    // Keeping it as fragment if you have AddProductFragment, 
-                    // but for now, navigating to activity as before or swapping fragment.
-                    // For consistency with user side, let's load fragments.
-                    // If no AddProductFragment, we can keep the activity start but it might break the "bottom nav" feel.
-                    // Let's stick to Profile for now.
-                    true
-                }
                 R.id.nav_booking -> {
                     loadFragment(BookingsFragment())
                     true
                 }
+                R.id.nav_payments -> {
+                    loadFragment(AdminPaymentsFragment())
+                    true
+                }
+
                 R.id.nav_profile -> {
                     loadFragment(ProfileFragment())
                     true
                 }
+
                 else -> false
             }
         }

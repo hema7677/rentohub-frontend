@@ -15,6 +15,9 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.model.GlideUrl
+import com.bumptech.glide.load.model.LazyHeaders
 import java.io.File
 
 class UpdateProductActivity : AppCompatActivity() {
@@ -59,6 +62,24 @@ class UpdateProductActivity : AppCompatActivity() {
         etDailyRate.setText(intent.getStringExtra("daily_rate"))
         etDeposit.setText(intent.getStringExtra("deposit"))
         etDescription.setText(intent.getStringExtra("description"))
+
+        val existingImage = intent.getStringExtra("image") ?: ""
+        if (existingImage.isNotEmpty()) {
+            val imageUrl = if (existingImage.startsWith("http")) {
+                existingImage
+            } else {
+                RetrofitClient.BASE_URL + existingImage
+            }
+
+            val glideUrl = GlideUrl(imageUrl, LazyHeaders.Builder()
+                .addHeader("X-Tunnel-Skip-Anti-Phishing-Page", "true")
+                .build())
+
+            Glide.with(this)
+                .load(glideUrl)
+                .placeholder(R.drawable.placeholder)
+                .into(imgProduct)
+        }
 
         imgProduct.setOnClickListener { pickImage() }
         btnUpdate.setOnClickListener { updateProduct() }

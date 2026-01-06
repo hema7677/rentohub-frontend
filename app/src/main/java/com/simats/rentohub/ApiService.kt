@@ -48,8 +48,9 @@ interface ApiService {
 
     // ================= DELETE PRODUCT =================
     @FormUrlEncoded
-    @POST("delet.php")
+    @POST("delete.php")
     fun deleteProduct(@Field("id") id: Int): Call<DeleteResponse>
+
 
 
     @Multipart
@@ -74,11 +75,30 @@ interface ApiService {
 
     // ================= PLACE BOOKING =================
     @FormUrlEncoded
-    @POST("book_equipment.php") // Assumed filename based on context
+    @POST("booking.php") // Check if your file is named booking.php or add_booking.php
     fun placeBooking(
         @Field("user_id") userId: String,
         @Field("equipment_id") equipmentId: String,
-        @Field("days") days: String
+        @Field("days") days: String,
+        @Field("address") address: String
     ): Call<BookingResponse>
 
+    // ================= GET USER BOOKINGS =================
+    @FormUrlEncoded
+    @POST("view_bookings.php")
+    fun getUserBookings(
+        @Field("user_id") userId: String
+    ): Call<UserBookingsResponse>
+
+    // ================= UPDATE BOOKING STATUS =================
+    @FormUrlEncoded
+    @POST("update_booking_status.php")
+    fun updateBookingStatus(
+        @Field("booking_id") bookingId: String,
+        @Field("status") status: String
+    ): Call<UpdateProductResponse> // Reusing UpdateProductResponse if it has status/message, or create a new one.
+
+    // ================= GET ALL BOOKINGS (ADMIN) =================
+    @GET("view_all_bookings.php")
+    fun getAllBookings(): Call<UserBookingsResponse>
 }

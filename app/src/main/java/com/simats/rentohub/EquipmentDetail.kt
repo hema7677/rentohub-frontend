@@ -9,5 +9,6 @@ data class EquipmentDetail(
     val deposit: String?,
     val description: String?,
     val image: String?,
-    val status: String?
+    val status: String?,
+    val owner_contact: String?
 )

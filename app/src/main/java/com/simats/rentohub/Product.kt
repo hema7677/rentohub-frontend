@@ -10,7 +10,7 @@ data class Product(
     val price_per_day: String,
     val deposit: String,
     val description: String,
-    val imgProduct: String,
+    val image: String?,
     val status: String
 )
 

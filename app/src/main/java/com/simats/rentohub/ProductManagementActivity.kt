@@ -23,6 +23,17 @@ class ProductManagementActivity : AppCompatActivity() {
         recyclerView = findViewById(R.id.recyclerProducts)
         recyclerView.layoutManager = LinearLayoutManager(this)
 
+        val etSearch: android.widget.EditText = findViewById(R.id.etSearch)
+        etSearch.addTextChangedListener(object : android.text.TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                if (::adapter.isInitialized) {
+                    adapter.filter(s.toString())
+                }
+            }
+            override fun afterTextChanged(s: android.text.Editable?) {}
+        })
+
         loadProducts()
     }
 
@@ -46,8 +57,8 @@ class ProductManagementActivity : AppCompatActivity() {
                                 intent.putExtra("daily_rate", product.price_per_day)
                                 intent.putExtra("deposit", product.deposit)
                                 intent.putExtra("description", product.description)
-                                intent.putExtra("image",product.imgProduct)
-                                intent.putExtra("status",product.status)
+                                intent.putExtra("image", product.image)
+                                intent.putExtra("status", product.status)
                                 startActivity(intent)
                             },
                             onDeleteClick = { product ->
@@ -84,6 +95,13 @@ class ProductManagementActivity : AppCompatActivity() {
                             }
                         )
                         recyclerView.adapter = adapter
+                        
+                        // RE-APPLY SEARCH FILTER IF USER ALREADY TYPED
+                        val etSearch: android.widget.EditText = findViewById(R.id.etSearch)
+                        val currentQuery = etSearch.text.toString()
+                        if (currentQuery.isNotEmpty()) {
+                            adapter.filter(currentQuery)
+                        }
                     } else {
                         Toast.makeText(
                             this@ProductManagementActivity,

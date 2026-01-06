@@ -40,9 +40,9 @@ class CategoryAdapter(
         holder.title.text = item.title
         holder.img.setImageResource(item.iconResId)
         
-        // Set dynamic colors
+        // Set dynamic card color but keep image as-is (realistic)
         holder.card.setCardBackgroundColor(Color.parseColor(item.backgroundColor))
-        holder.img.imageTintList = ColorStateList.valueOf(Color.parseColor(item.iconTint))
+        // holder.img.imageTintList = ColorStateList.valueOf(Color.parseColor(item.iconTint)) // Removed tint for realistic photos
 
         holder.itemView.setOnClickListener {
             onItemClick(item)

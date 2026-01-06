@@ -13,8 +13,8 @@
         <ImageView
             android:id="@+id/headerImage"
             android:layout_width="match_parent"
-            android:layout_height="380dp"
-            android:scaleType="centerCrop"
+            android:layout_height="300dp"
+            android:scaleType="fitCenter"
             android:src="@drawable/header_image" />
 
         <TextView
