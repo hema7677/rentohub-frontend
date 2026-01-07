@@ -9,9 +9,9 @@ import java.util.concurrent.TimeUnit
 object RetrofitClient {
 
     // Emulator
-    const val BASE_URL = "http://192.168.0.104/rentohub/"
+    const val BASE_URL = "http://192.168.137.1/rentohub/"
     // Physical device (same Wi-Fi)
-    // const val BASE_URL = "http://192.168.1.5:80/rentohub/"
+//     const val BASE_URL = "https://5gglqqk6-80.inc1.devtunnels.ms/rentohub/"
 
     private val loggingInterceptor = HttpLoggingInterceptor().apply {
         level = HttpLoggingInterceptor.Level.BODY
