@@ -19,6 +19,7 @@ class BookingsFragment : Fragment() {
     private lateinit var tabActive: TextView
     private lateinit var tabCompleted: TextView
     private lateinit var rvBookings: RecyclerView
+    private lateinit var progressBar: android.widget.ProgressBar
     
     private var allBookings: List<BookingItem> = mutableListOf()
     private var isAdmin: Boolean = false
@@ -57,6 +58,7 @@ class BookingsFragment : Fragment() {
         }
 
         rvBookings = view.findViewById(R.id.rvBookings)
+        progressBar = view.findViewById(R.id.progressBar)
         rvBookings.layoutManager = LinearLayoutManager(context)
 
         // Fetch Bookings from API
@@ -97,8 +99,10 @@ class BookingsFragment : Fragment() {
         }
 
 
+        progressBar.visibility = View.VISIBLE
         call.enqueue(object : Callback<UserBookingsResponse> {
             override fun onResponse(call: Call<UserBookingsResponse>, response: Response<UserBookingsResponse>) {
+                progressBar.visibility = View.GONE
                 if (response.isSuccessful) {
                     val body = response.body()
                     if (body?.status == "success") {
@@ -142,6 +146,7 @@ class BookingsFragment : Fragment() {
             }
 
             override fun onFailure(call: Call<UserBookingsResponse>, t: Throwable) {
+                progressBar.visibility = View.GONE
                 allBookings = emptyList()
                 filterBookings(currentSelectedTab)
                 context?.let {
@@ -197,7 +202,7 @@ class BookingsFragment : Fragment() {
             }
         }
         
-        rvBookings.adapter = BookingAdapter(filtered, isAdmin) { booking, newStatus ->
+        rvBookings.adapter = BookingAdapter(filtered, false) { booking, newStatus ->
             updateBookingStatus(booking.id, newStatus)
         }
     }

@@ -14,7 +14,6 @@ class AdminDashboardActivity : AppCompatActivity() {
 
         // 🔹 Bottom Navigation
         val bottomNav = findViewById<BottomNavigationView>(R.id.bottom_navigation)
-        bottomNav.selectedItemId = R.id.nav_home
 
         bottomNav.setOnItemSelectedListener { item ->
             when (item.itemId) {
@@ -38,6 +37,11 @@ class AdminDashboardActivity : AppCompatActivity() {
 
                 else -> false
             }
+        }
+
+        // Set default selection
+        if (savedInstanceState == null) {
+            bottomNav.selectedItemId = R.id.nav_home
         }
     }
 

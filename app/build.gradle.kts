@@ -70,6 +70,7 @@ dependencies {
     implementation(libs.play.services.location)
     implementation(libs.play.services.auth)
     implementation(libs.firebase.auth.ktx)
+    implementation("com.android.billingclient:billing-ktx:6.1.0")
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
