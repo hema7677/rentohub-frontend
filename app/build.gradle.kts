@@ -6,7 +6,7 @@ plugins {
 
 android {
     namespace = "com.simats.rentohub"
-    compileSdk = 34   // <-- Use 34 or 35 (36 not fully released yet)
+    compileSdk = 35   // <-- Use 34 or 35 (36 not fully released yet)
 
     buildFeatures {
         viewBinding = true
@@ -71,7 +71,7 @@ dependencies {
     implementation(libs.play.services.auth)
     implementation(libs.firebase.auth.ktx)
     implementation("com.android.billingclient:billing-ktx:6.1.0")
-
+    implementation("com.google.android.material:material:1.11.0")
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
